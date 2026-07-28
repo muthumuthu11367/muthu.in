@@ -1,0 +1,118 @@
+{
+  "entities": {
+    "site_config": {
+      "title": "Site Configuration",
+      "description": "Global settings for hero, about, theme, and brand",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "subtitle": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      }
+    },
+    "projects": {
+      "title": "Projects",
+      "description": "Portfolio projects showcase",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "category": { "type": "string" },
+        "technologies": { "type": "array", "items": { "type": "string" } },
+        "featured": { "type": "boolean" },
+        "published": { "type": "boolean" },
+        "githubUrl": { "type": "string" },
+        "demoUrl": { "type": "string" },
+        "images": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["title", "category"]
+    },
+    "skills": {
+      "title": "Skills",
+      "description": "Developer skill list with proficiency",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "proficiency": { "type": "number" },
+        "icon": { "type": "string" }
+      },
+      "required": ["name", "category"]
+    },
+    "services": {
+      "title": "Services",
+      "description": "Services offered",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "icon": { "type": "string" }
+      },
+      "required": ["title"]
+    },
+    "certificates": {
+      "title": "Certificates",
+      "description": "Certifications and credentials",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "issuer": { "type": "string" },
+        "issueDate": { "type": "string" },
+        "credentialUrl": { "type": "string" },
+        "imageUrl": { "type": "string" }
+      },
+      "required": ["title"]
+    },
+    "testimonials": {
+      "title": "Testimonials",
+      "description": "Client reviews and recommendations",
+      "type": "object",
+      "properties": {
+        "clientName": { "type": "string" },
+        "company": { "type": "string" },
+        "rating": { "type": "number" },
+        "review": { "type": "string" },
+        "avatar": { "type": "string" }
+      },
+      "required": ["clientName", "review"]
+    },
+    "gallery": {
+      "title": "Gallery",
+      "description": "Media gallery items",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "imageUrl": { "type": "string" }
+      },
+      "required": ["title", "imageUrl"]
+    },
+    "social_links": {
+      "title": "Social Links",
+      "description": "Social media links",
+      "type": "object",
+      "properties": {
+        "platform": { "type": "string" },
+        "url": { "type": "string" },
+        "enabled": { "type": "boolean" },
+        "order": { "type": "number" }
+      },
+      "required": ["platform", "url"]
+    },
+    "messages": {
+      "title": "Messages",
+      "description": "Contact form submissions",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "subject": { "type": "string" },
+        "message": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "read": { "type": "boolean" }
+      },
+      "required": ["name", "email", "message"]
+    }
+  }
+}
