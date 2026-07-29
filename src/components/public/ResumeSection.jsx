@@ -1,163 +1,735 @@
 import React, { useState, useEffect } from 'react';
-import { FileText, Download, Eye, CheckCircle2, ExternalLink, Sparkles, X } from 'lucide-react';
+import {
+  FileText,
+  Download,
+  Eye,
+  CheckCircle2,
+  X,
+} from 'lucide-react';
+
 import { useData } from '../../context/DataContext';
 
 export const ResumeSection = () => {
   const { hero, about, sectionTitles } = useData();
+
   const [showPreviewModal, setShowPreviewModal] = useState(false);
 
+  // =========================================================
+  // OPEN MODAL
+  // =========================================================
+
+  const openPreviewModal = () => {
+    setShowPreviewModal(true);
+  };
+
+  // =========================================================
+  // CLOSE MODAL
+  // =========================================================
+
+  const closePreviewModal = () => {
+    setShowPreviewModal(false);
+  };
+
+  // =========================================================
+  // LOCK PAGE SCROLL WHEN MODAL IS OPEN
+  // =========================================================
+
   useEffect(() => {
-    if (showPreviewModal) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
+    if (!showPreviewModal) return;
+
+    const scrollY = window.scrollY;
+
+    // Completely lock background page
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
+    document.body.style.overflow = 'hidden';
+
     return () => {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
       document.body.style.overflow = '';
+
+      window.scrollTo(0, scrollY);
     };
   }, [showPreviewModal]);
 
+  // =========================================================
+  // CLOSE MODAL USING ESC KEY
+  // =========================================================
+
+  useEffect(() => {
+    if (!showPreviewModal) return;
+
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') {
+        closePreviewModal();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [showPreviewModal]);
+
+  // =========================================================
+  // SAFE DATA
+  // =========================================================
+
+  const experiences = about?.experiences || [];
+
   return (
-    <section id="resume" className="py-6 sm:py-8 px-4 sm:px-6 lg:px-8 relative z-10 bg-slate-950">
-      <div className="max-w-7xl mx-auto space-y-4">
-        {/* Header */}
-        <div className="text-center space-y-1 max-w-3xl mx-auto px-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-slate-900 border border-slate-800 text-slate-300 text-xs font-semibold uppercase tracking-wider">
-            <FileText className="w-3.5 h-3.5 text-indigo-400" />
-            <span>Curriculum Vitae</span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-100 leading-tight break-words">
-            {sectionTitles.resume || 'Professional Resume and CV'}
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-2xl mx-auto break-words">
-            {sectionTitles.resumeSubtitle || 'Download my verified curriculum vitae or inspect key architectural career milestones.'}
-          </p>
-        </div>
+    <>
+      {/* ===================================================== */}
+      {/* RESUME SECTION */}
+      {/* ===================================================== */}
 
-        {/* Resume Card */}
-        <div className="glass-panel p-8 sm:p-12 rounded-3xl border border-slate-800/80 max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-center shadow-2xl relative overflow-hidden">
+      <section
+        id="resume"
+        className="
+          relative
+          z-10
+          bg-slate-950
+          px-4
+          py-6
+          sm:px-6
+          sm:py-8
+          lg:px-8
+        "
+      >
+        <div className="mx-auto max-w-7xl space-y-4">
 
-          {/* Left Column */}
-          <div className="md:col-span-8 space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-500/30">
-                <FileText className="w-6 h-6" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-slate-100">{hero.name} – Senior Architect Resume</h3>
-                <p className="text-xs text-indigo-400 font-semibold">{hero.title}</p>
-              </div>
+          {/* ================================================= */}
+          {/* HEADER */}
+          {/* ================================================= */}
+
+          <div className="mx-auto max-w-3xl space-y-1 px-2 text-center">
+
+            <div
+              className="
+                inline-flex
+                items-center
+                gap-2
+                rounded-md
+                border
+                border-slate-800
+                bg-slate-900
+                px-3
+                py-1
+                text-xs
+                font-semibold
+                uppercase
+                tracking-wider
+                text-slate-300
+              "
+            >
+              <FileText className="h-3.5 w-3.5 text-indigo-400" />
+
+              <span>Curriculum Vitae</span>
             </div>
 
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              Comprehensive overview of {about.yearsOfExperience}+ years experience in Full Stack Software Engineering, Cloud Systems Architecture, Firebase Authentication, React 19 performance tuning, and leading technical teams.
+            <h2
+              className="
+                break-words
+                text-2xl
+                font-bold
+                leading-tight
+                tracking-tight
+                text-slate-100
+                sm:text-3xl
+              "
+            >
+              {sectionTitles?.resume ||
+                'Professional Resume and CV'}
+            </h2>
+
+            <p
+              className="
+                mx-auto
+                max-w-2xl
+                break-words
+                text-xs
+                leading-relaxed
+                text-slate-400
+                sm:text-sm
+              "
+            >
+              {sectionTitles?.resumeSubtitle ||
+                'Download my verified curriculum vitae or inspect key architectural career milestones.'}
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-300 pt-2">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Verified Employment History</span>
+          </div>
+
+          {/* ================================================= */}
+          {/* RESUME CARD */}
+          {/* ================================================= */}
+
+          <div
+            className="
+              glass-panel
+              relative
+              mx-auto
+              grid
+              max-w-4xl
+              grid-cols-1
+              items-center
+              gap-8
+              overflow-hidden
+              rounded-3xl
+              border
+              border-slate-800/80
+              p-8
+              shadow-2xl
+              sm:p-12
+              md:grid-cols-12
+            "
+          >
+
+            {/* =============================================== */}
+            {/* LEFT COLUMN */}
+            {/* =============================================== */}
+
+            <div className="space-y-4 md:col-span-8">
+
+              <div className="flex items-center gap-3">
+
+                <div
+                  className="
+                    flex
+                    h-12
+                    w-12
+                    shrink-0
+                    items-center
+                    justify-center
+                    rounded-2xl
+                    bg-gradient-to-tr
+                    from-indigo-500
+                    to-purple-500
+                    text-white
+                    shadow-lg
+                    shadow-indigo-500/30
+                  "
+                >
+                  <FileText className="h-6 w-6" />
+                </div>
+
+                <div className="min-w-0">
+
+                  <h3 className="break-words text-xl font-bold text-slate-100">
+                    {hero?.name} – Senior Architect Resume
+                  </h3>
+
+                  <p className="text-xs font-semibold text-indigo-400">
+                    {hero?.title}
+                  </p>
+
+                </div>
+
               </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Academic & Cloud Certifications</span>
+
+              {/* Description */}
+
+              <p className="text-xs leading-relaxed text-slate-300 sm:text-sm">
+                Comprehensive overview of{' '}
+                {about?.yearsOfExperience || 0}+ years experience in
+                Full Stack Software Engineering, Cloud Systems
+                Architecture, Firebase Authentication, React 19
+                performance tuning, and leading technical teams.
+              </p>
+
+              {/* Resume Features */}
+
+              <div
+                className="
+                  grid
+                  grid-cols-1
+                  gap-2
+                  pt-2
+                  text-xs
+                  text-slate-300
+                  sm:grid-cols-2
+                "
+              >
+
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
+                  <span>Verified Employment History</span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
+                  <span>Academic & Cloud Certifications</span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
+                  <span>Selected Enterprise Case Studies</span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
+                  <span>Contact & Recommendation References</span>
+                </div>
+
               </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Selected Enterprise Case Studies</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Contact & Recommendation References</span>
-              </div>
+
             </div>
+
+            {/* =============================================== */}
+            {/* RIGHT COLUMN */}
+            {/* =============================================== */}
+
+            <div
+              className="
+                flex
+                flex-col
+                justify-center
+                gap-3
+                md:col-span-4
+              "
+            >
+
+              {/* Download Resume */}
+
+              <a
+                href={hero?.resumeUrl || '#'}
+                download={`${hero?.name || 'Muthu'}-Resume.pdf`}
+                target={
+                  hero?.resumeUrl?.startsWith('http')
+                    ? '_blank'
+                    : undefined
+                }
+                rel="noreferrer"
+                className="
+                  flex
+                  w-full
+                  items-center
+                  justify-center
+                  gap-2
+                  rounded-2xl
+                  bg-gradient-to-r
+                  from-indigo-500
+                  via-purple-500
+                  to-pink-500
+                  px-6
+                  py-3.5
+                  text-xs
+                  font-bold
+                  text-white
+                  shadow-xl
+                  shadow-indigo-500/30
+                  transition-all
+                  hover:opacity-95
+                  active:scale-95
+                  sm:text-sm
+                "
+              >
+                <Download className="h-4 w-4" />
+
+                <span>Download PDF Resume</span>
+              </a>
+
+              {/* Live Overview */}
+
+              <button
+                type="button"
+                onClick={openPreviewModal}
+                className="
+                  flex
+                  w-full
+                  cursor-pointer
+                  items-center
+                  justify-center
+                  gap-2
+                  rounded-2xl
+                  border
+                  border-slate-800
+                  bg-slate-900
+                  px-6
+                  py-3.5
+                  text-xs
+                  font-bold
+                  text-slate-200
+                  transition-all
+                  hover:bg-slate-800
+                  hover:text-white
+                  sm:text-sm
+                "
+              >
+                <Eye className="h-4 w-4 text-indigo-400" />
+
+                <span>Live CV Overview</span>
+              </button>
+
+            </div>
+
           </div>
 
-          {/* Right Column: Actions */}
-          <div className="md:col-span-4 flex flex-col gap-3 justify-center">
-            <a
-              href={hero.resumeUrl || '#'}
-              download={`${hero.name || 'Muthu'}-Resume.pdf`}
-              target={hero.resumeUrl?.startsWith('http') ? '_blank' : undefined}
-              rel="noreferrer"
-              className="w-full py-3.5 px-6 rounded-2xl font-bold text-xs sm:text-sm bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white shadow-xl shadow-indigo-500/30 hover:opacity-95 flex items-center justify-center gap-2 transition-all active:scale-95"
-            >
-              <Download className="w-4 h-4" />
-              <span>Download PDF Resume</span>
-            </a>
-
-            <button
-              onClick={() => setShowPreviewModal(true)}
-              className="w-full py-3.5 px-6 rounded-2xl font-bold text-xs sm:text-sm bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 hover:text-white flex items-center justify-center gap-2 transition-all"
-            >
-              <Eye className="w-4 h-4 text-indigo-400" />
-              <span>Live CV Overview</span>
-            </button>
-          </div>
         </div>
-      </div>
+      </section>
 
-      {/* CV Preview Modal Overlay */}
+      {/* ===================================================== */}
+      {/* LIVE CV OVERVIEW MODAL */}
+      {/* ===================================================== */}
+
       {showPreviewModal && (
         <div
-          className="fixed inset-0 z-[99999] flex items-center justify-center p-4 pt-16 sm:pt-20 pb-6 overflow-y-auto bg-slate-950/90"
-          onClick={() => setShowPreviewModal(false)}
+          className="
+            fixed
+            inset-0
+            z-[999999]
+            flex
+            items-center
+            justify-center
+            overflow-hidden
+            bg-slate-950/90
+            p-3
+            backdrop-blur-md
+            sm:p-5
+          "
+          onMouseDown={(event) => {
+            // Close only when clicking outside the modal
+            if (event.target === event.currentTarget) {
+              closePreviewModal();
+            }
+          }}
         >
+
+          {/* ================================================= */}
+          {/* MODAL CONTAINER */}
+          {/* ================================================= */}
+
           <div
-            className="bg-slate-900 border border-slate-700/80 p-6 sm:p-8 rounded-3xl max-w-3xl w-full space-y-6 shadow-2xl relative my-auto z-[100000] max-h-[85vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="cv-modal-title"
+            onMouseDown={(event) => {
+              event.stopPropagation();
+            }}
+            className="
+              relative
+              z-[1000000]
+              flex
+              w-full
+              max-w-3xl
+              flex-col
+              overflow-hidden
+              rounded-2xl
+              border
+              border-slate-700/80
+              bg-slate-900
+              p-4
+              shadow-2xl
+              sm:rounded-3xl
+              sm:p-6
+            "
+            style={{
+              maxHeight: 'calc(100dvh - 24px)',
+            }}
           >
-            <div className="flex justify-between items-center border-b border-slate-800 pb-4">
-              <div>
-                <h3 className="text-xl font-bold text-slate-100">{hero.name} – Executive Summary</h3>
-                <p className="text-xs text-indigo-400 font-semibold">{hero.title}</p>
+
+            {/* ================================================= */}
+            {/* MODAL HEADER */}
+            {/* ================================================= */}
+
+            <div
+              className="
+                flex
+                shrink-0
+                items-start
+                justify-between
+                gap-4
+                border-b
+                border-slate-800
+                pb-3
+              "
+            >
+
+              <div className="min-w-0">
+
+                <h3
+                  id="cv-modal-title"
+                  className="
+                    break-words
+                    text-lg
+                    font-bold
+                    text-slate-100
+                    sm:text-xl
+                  "
+                >
+                  {hero?.name} – Executive Summary
+                </h3>
+
+                <p className="mt-1 text-xs font-semibold text-indigo-400">
+                  {hero?.title}
+                </p>
+
               </div>
+
+              {/* ============================================= */}
+              {/* CLOSE / END BUTTON */}
+              {/* ============================================= */}
+
               <button
-                onClick={() => setShowPreviewModal(false)}
-                className="p-2 rounded-xl bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-all cursor-pointer"
-                aria-label="Close modal"
+                type="button"
+                onClick={closePreviewModal}
+                aria-label="Close Live CV Overview"
+                className="
+                  flex
+                  h-9
+                  w-9
+                  shrink-0
+                  cursor-pointer
+                  items-center
+                  justify-center
+                  rounded-xl
+                  bg-slate-800
+                  text-slate-400
+                  transition-all
+                  hover:bg-red-500/20
+                  hover:text-red-400
+                  active:scale-90
+                "
               >
-                <X className="w-5 h-5" />
+                <X className="h-5 w-5" />
               </button>
+
             </div>
 
-            <div className="space-y-4 text-xs text-slate-300 leading-relaxed">
-              <div>
-                <h4 className="font-bold text-slate-100 text-sm mb-1">Career Highlights</h4>
-                <p>{about.summary}</p>
-              </div>
+            {/* ================================================= */}
+            {/* MODAL CONTENT */}
+            {/* ================================================= */}
+
+            <div
+              className="
+                min-h-0
+                flex-1
+                space-y-3
+                overflow-hidden
+                py-3
+                text-xs
+                leading-relaxed
+                text-slate-300
+              "
+            >
+
+              {/* ============================================= */}
+              {/* CAREER HIGHLIGHTS */}
+              {/* ============================================= */}
 
               <div>
-                <h4 className="font-bold text-slate-100 text-sm mb-2">Primary Roles</h4>
-                <div className="space-y-2">
-                  {about.experiences.map((exp) => (
-                    <div key={exp.id} className="p-3 bg-slate-950 rounded-xl border border-slate-800">
-                      <div className="flex justify-between font-semibold text-slate-100">
-                        <span>{exp.role} @ {exp.company}</span>
-                        <span className="text-indigo-400">{exp.startDate} - {exp.current ? 'Present' : exp.endDate}</span>
+
+                <h4 className="mb-1 text-sm font-bold text-slate-100">
+                  Career Highlights
+                </h4>
+
+                <p
+                  className="
+                    line-clamp-3
+                    text-xs
+                    leading-relaxed
+                    text-slate-400
+                    sm:line-clamp-none
+                  "
+                >
+                  {about?.summary ||
+                    'Professional career summary is currently unavailable.'}
+                </p>
+
+              </div>
+
+              {/* ============================================= */}
+              {/* PRIMARY ROLES */}
+              {/* ============================================= */}
+
+              {experiences.length > 0 && (
+                <div>
+
+                  <h4 className="mb-2 text-sm font-bold text-slate-100">
+                    Primary Roles
+                  </h4>
+
+                  <div
+                    className="
+                      grid
+                      grid-cols-1
+                      gap-2
+                      md:grid-cols-2
+                    "
+                  >
+
+                    {experiences.slice(0, 4).map((exp) => (
+                      <div
+                        key={exp.id}
+                        className="
+                          min-w-0
+                          rounded-xl
+                          border
+                          border-slate-800
+                          bg-slate-950
+                          p-3
+                        "
+                      >
+
+                        {/* Role + Company */}
+
+                        <div
+                          className="
+                            flex
+                            flex-col
+                            gap-1
+                            font-semibold
+                            text-slate-100
+                            sm:flex-row
+                            sm:items-start
+                            sm:justify-between
+                          "
+                        >
+
+                          <span className="break-words">
+                            {exp.role} @ {exp.company}
+                          </span>
+
+                          <span
+                            className="
+                              shrink-0
+                              whitespace-nowrap
+                              text-[10px]
+                              text-indigo-400
+                            "
+                          >
+                            {exp.startDate} -{' '}
+                            {exp.current
+                              ? 'Present'
+                              : exp.endDate}
+                          </span>
+
+                        </div>
+
+                        {/* Description */}
+
+                        {exp.description && (
+                          <p
+                            className="
+                              mt-1
+                              line-clamp-2
+                              break-words
+                              text-[11px]
+                              leading-relaxed
+                              text-slate-400
+                            "
+                          >
+                            {exp.description}
+                          </p>
+                        )}
+
                       </div>
-                      <p className="text-slate-400 text-[11px] mt-1">{exp.description}</p>
-                    </div>
-                  ))}
+                    ))}
+
+                  </div>
+
                 </div>
-              </div>
+              )}
+
             </div>
 
-            <div className="pt-4 border-t border-slate-800 flex justify-end">
-              <a
-                href={hero.resumeUrl || '#'}
-                download={`${hero.name || 'Muthu'}-Resume.pdf`}
-                target={hero.resumeUrl?.startsWith('http') ? '_blank' : undefined}
-                rel="noreferrer"
-                className="py-2.5 px-5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold flex items-center gap-2 shadow-lg"
+            {/* ================================================= */}
+            {/* MODAL FOOTER */}
+            {/* ================================================= */}
+
+            <div
+              className="
+                flex
+                shrink-0
+                flex-col
+                gap-2
+                border-t
+                border-slate-800
+                pt-3
+                sm:flex-row
+                sm:items-center
+                sm:justify-end
+              "
+            >
+
+              {/* Close / End Button */}
+
+              <button
+                type="button"
+                onClick={closePreviewModal}
+                className="
+                  flex
+                  items-center
+                  justify-center
+                  gap-2
+                  rounded-xl
+                  border
+                  border-slate-700
+                  bg-slate-800
+                  px-5
+                  py-2.5
+                  text-xs
+                  font-bold
+                  text-slate-300
+                  transition-all
+                  hover:bg-slate-700
+                  hover:text-white
+                  active:scale-95
+                "
               >
-                <Download className="w-4 h-4" />
+                <X className="h-4 w-4" />
+
+                <span>End Overview</span>
+              </button>
+
+              {/* Download */}
+
+              <a
+                href={hero?.resumeUrl || '#'}
+                download={`${hero?.name || 'Muthu'}-Resume.pdf`}
+                target={
+                  hero?.resumeUrl?.startsWith('http')
+                    ? '_blank'
+                    : undefined
+                }
+                rel="noreferrer"
+                className="
+                  flex
+                  items-center
+                  justify-center
+                  gap-2
+                  rounded-xl
+                  bg-indigo-600
+                  px-5
+                  py-2.5
+                  text-xs
+                  font-bold
+                  text-white
+                  shadow-lg
+                  transition-all
+                  hover:bg-indigo-500
+                  active:scale-95
+                "
+              >
+                <Download className="h-4 w-4" />
+
                 <span>Download Official PDF</span>
               </a>
+
             </div>
+
           </div>
         </div>
       )}
-    </section>
+    </>
   );
 };
+
+export default ResumeSection;
