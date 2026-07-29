@@ -123,7 +123,7 @@ export const AboutSection = () => {
           {/* Timeline Content */}
           <div className="relative border-l-2 border-slate-800 ml-4 sm:ml-8 space-y-8 pl-6 sm:pl-8">
             {activeTab === 'experience' &&
-              about.experiences.map((exp) => (
+              (about.experiences || []).map((exp) => (
                 <div key={exp.id} className="relative group">
                   {/* Timeline Dot */}
                   <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-5 h-5 rounded-full bg-slate-900 border-2 border-indigo-500 group-hover:scale-125 group-hover:bg-indigo-500 transition-all" />
@@ -136,8 +136,13 @@ export const AboutSection = () => {
                       </div>
                       <div className="flex items-center gap-2 text-xs text-slate-400 bg-slate-950 px-3 py-1 rounded-full border border-slate-800">
                         <Calendar className="w-3.5 h-3.5 text-indigo-400" />
-                        <span>{exp.startDate} – {exp.current ? 'Present' : exp.endDate}</span>
+                        <span>{exp.startDate} – {exp.current ? 'Present' : (exp.endDate || 'N/A')}</span>
                       </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 text-[11px] text-slate-400">
+                      <MapPin className="w-3.5 h-3.5 text-pink-400 shrink-0" />
+                      <span>{exp.location}</span>
                     </div>
 
                     <p className="text-xs text-slate-300 leading-relaxed">
@@ -146,9 +151,9 @@ export const AboutSection = () => {
 
                     {exp.technologies && exp.technologies.length > 0 && (
                       <div className="flex flex-wrap gap-1.5 pt-2">
-                        {exp.technologies.map((tech) => (
+                        {exp.technologies.map((tech, idx) => (
                           <span
-                            key={tech}
+                            key={idx}
                             className="px-2.5 py-1 rounded-md bg-slate-950 border border-slate-800 text-[11px] text-slate-300 font-mono"
                           >
                             {tech}
@@ -161,7 +166,7 @@ export const AboutSection = () => {
               ))}
 
             {activeTab === 'education' &&
-              about.education.map((edu) => (
+              (about.education || []).map((edu) => (
                 <div key={edu.id} className="relative group">
                   <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-5 h-5 rounded-full bg-slate-900 border-2 border-purple-500 group-hover:scale-125 group-hover:bg-purple-500 transition-all" />
 

@@ -210,6 +210,7 @@ export const DataProvider = ({ children }) => {
     const updated = { ...about, ...data };
     setAbout(updated);
     try {
+      localStorage.setItem('pf_about', JSON.stringify(updated));
       await setDoc(doc(db, 'site_config', 'about'), updated, { merge: true });
     } catch (e) {
       console.warn('About update local sync fallback:', e);
